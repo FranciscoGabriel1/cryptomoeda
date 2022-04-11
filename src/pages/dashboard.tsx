@@ -10,10 +10,79 @@ import {
 } from "@chakra-ui/react";
 import Carrousel from "../components/Carrousel";
 import Header from "../components/Header";
-import Table from "../components/Table";
+import { DataTable } from "../components/DataTable";
 import { Switch } from "@chakra-ui/react";
+import { Column } from "react-table";
+import { useCallback, useEffect, useState } from "react";
+import { api } from "../services/api";
+
+type DataType = {
+  market_cap_rank:number;
+  name: string;
+  price: number;
+  current_price: number;
+  price_change_percentage_24h: number;
+  atl: number;
+  market_cap: number;
+};
+
+
+
+const columns: Column<any>[] = [
+  {
+    Header: " ",
+    accessor: "",
+  },
+  {
+    Header: "#",
+    accessor: "market_cap_rank",
+  },
+  {
+    Header: "Nome",
+    accessor: "name",
+    isNumeric: true,
+  },
+  {
+    Header: "Preço",
+    accessor: "current_price",
+    isNumeric: true,
+  },
+  {
+    Header: "24h %",
+    accessor: "price_change_percentage_24h",
+  },
+  {
+    Header: "7d %",
+    accessor: "atl",
+    isNumeric: true,
+  },
+  {
+    Header: "Valor de mercado",
+    accessor: "market_cap",
+  },
+];
 
 export default function Dashboard() {
+  const [crypto, setCrypto] = useState<DataType[]>([]);
+
+
+  const getCrypto = useCallback(async () => {
+    try {
+      let url = "/coins/markets/?vs_currency=usd";
+      const getCrytoData = await api.get(url);
+      const getCryptoContent: DataType[] = getCrytoData.data;
+      setCrypto(getCryptoContent);
+      console.log("getCryptoContent: ",getCryptoContent)
+      console.log(crypto);
+    } catch (e) {
+      console.error("Analysis error: ", e);
+    }
+  }, [setCrypto]);
+
+  useEffect(() => {
+    getCrypto();
+  }, [getCrypto]);
+
   return (
     <>
       <Flex direction="column" h="100vh">
@@ -27,7 +96,7 @@ export default function Dashboard() {
             mt="1px"
           >
             <Flex width={"100%"} mt="6">
-              <Box p="4" width={"50%"}>
+              <Box width={"50%"}>
                 <Heading as="h4" size="lg">
                   Preço das criptomoedas por valor de mercado
                 </Heading>
@@ -45,7 +114,10 @@ export default function Dashboard() {
           </SimpleGrid>
         </Flex>
         <Carrousel />
-        <Table />
+        <Box w="100%" maxWidth={1480} mx="auto" px="6" mt="30px">
+          <DataTable columns={columns} data={crypto} />
+        </Box>
+
       </Flex>
     </>
   );
