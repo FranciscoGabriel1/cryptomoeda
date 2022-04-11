@@ -72,7 +72,7 @@ export function DataTable<Data extends object>({
         {rows.map((row) => {
           prepareRow(row);
           return (
-            <Tr {...row.getRowProps()}>
+            <Tr {...row.getRowProps()}  _hover={{ bg: "gray.100" }}>
               {row.cells.map((cell) => (
                 <Td
                   {...cell.getCellProps()}

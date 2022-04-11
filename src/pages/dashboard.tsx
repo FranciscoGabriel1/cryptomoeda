@@ -13,53 +13,18 @@ import Header from "../components/Header";
 import { DataTable } from "../components/DataTable";
 import { Switch } from "@chakra-ui/react";
 import { Column } from "react-table";
+import { useCallback, useEffect, useState } from "react";
+import { api } from "../services/api";
 
-type UnitConversion = {
-  position:number;
-  name: string;
-  price: number;
-  day: number;
-  week: number;
-  marketValue: number;
-};
 
-const data: UnitConversion[] = [
-  {
-    position:1,
-    name: "Bitcoin",
-    price: 5000,
-    day: 199,
-    week: 88,
-    marketValue: 19,
-  },
-  {
-    position:2,
-    name: "BNB",
-    price: 4000,
-    day: 198,
-    week: 78,
-    marketValue: 49,
-  },
-  {
-    position:3,
-    name: "XRP",
-    price: 8000,
-    day: 196,
-    week: 68,
-    marketValue: 79,
-  },
-];
-
-// see https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react-table
-// to configure react-table typings
-const columns: Column<UnitConversion>[] = [
+const columns: Column<any>[] = [
   {
     Header: " ",
     accessor: "",
   },
   {
     Header: "#",
-    accessor: "position",
+    accessor: "market_cap_rank",
   },
   {
     Header: "Nome",
@@ -68,25 +33,45 @@ const columns: Column<UnitConversion>[] = [
   },
   {
     Header: "Preço",
-    accessor: "price",
+    accessor: "current_price",
     isNumeric: true,
   },
   {
     Header: "24h %",
-    accessor: "day",
+    accessor: "price_change_percentage_24h",
   },
   {
     Header: "7d %",
-    accessor: "week",
+    accessor: "atl",
     isNumeric: true,
   },
   {
     Header: "Valor de mercado",
-    accessor: "marketValue",
+    accessor: "market_cap",
   },
 ];
 
 export default function Dashboard() {
+  const [crypto, setCrypto] = useState<any>("");
+
+
+  const getCrypto = useCallback(async () => {
+    try {
+      let url = "/coins/markets/?vs_currency=usd";
+      const getCrytoData = await api.get(url);
+      const getCryptoContent: any = getCrytoData.data;
+      setCrypto(getCryptoContent);
+      console.log("getCryptoContent: ",getCryptoContent)
+      console.log(crypto);
+    } catch (e) {
+      console.error("Analysis error: ", e);
+    }
+  }, [setCrypto]);
+
+  useEffect(() => {
+    getCrypto();
+  }, [getCrypto]);
+
   return (
     <>
       <Flex direction="column" h="100vh">
@@ -118,11 +103,10 @@ export default function Dashboard() {
           </SimpleGrid>
         </Flex>
         <Carrousel />
-        <Box w="100%" maxWidth={1480} mx="auto" px="6">
-          <DataTable columns={columns} data={data} />
+        <Box w="100%" maxWidth={1480} mx="auto" px="6" mt="30px">
+          <DataTable columns={columns} data={crypto} />
         </Box>
 
-        {/* <DataTable /> */}
       </Flex>
     </>
   );
