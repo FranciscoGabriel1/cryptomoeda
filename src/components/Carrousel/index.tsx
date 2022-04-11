@@ -8,7 +8,7 @@ export default function Carrousel() {
       </Text>
 
       <Box h="120px">
-        <Text>Aqui vai um carrousel </Text>
+        <Text>Aqui vai um carrousel de favoritos</Text>
       </Box>
     </SimpleGrid>
   );
