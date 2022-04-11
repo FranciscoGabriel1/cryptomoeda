@@ -16,6 +16,17 @@ import { Column } from "react-table";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "../services/api";
 
+type DataType = {
+  market_cap_rank:number;
+  name: string;
+  price: number;
+  current_price: number;
+  price_change_percentage_24h: number;
+  atl: number;
+  market_cap: number;
+};
+
+
 
 const columns: Column<any>[] = [
   {
@@ -52,14 +63,14 @@ const columns: Column<any>[] = [
 ];
 
 export default function Dashboard() {
-  const [crypto, setCrypto] = useState<any>("");
+  const [crypto, setCrypto] = useState<DataType[]>([]);
 
 
   const getCrypto = useCallback(async () => {
     try {
       let url = "/coins/markets/?vs_currency=usd";
       const getCrytoData = await api.get(url);
-      const getCryptoContent: any = getCrytoData.data;
+      const getCryptoContent: DataType[] = getCrytoData.data;
       setCrypto(getCryptoContent);
       console.log("getCryptoContent: ",getCryptoContent)
       console.log(crypto);
