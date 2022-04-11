@@ -86,7 +86,7 @@ export default function Header() {
           <Image src={diamondImg} alt="diamond" />
           <Text
             transition={"all .3s ease"}
-            _groupHover={{ color: "pink.400" }}
+            _groupHover={{ color: "blue.400" }}
             fontWeight={500}
           >
             LogIn
@@ -98,7 +98,7 @@ export default function Header() {
             color={"white"}
             bg={"#3C67F7"}
             _hover={{
-              bg: "pink.300",
+              bg: "blue.300",
             }}
           >
             Sign Up
@@ -180,13 +180,13 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
       display={"block"}
       p={2}
       rounded={"md"}
-      _hover={{ bg: useColorModeValue("pink.50", "gray.900") }}
+      _hover={{ bg: useColorModeValue("blue.50", "gray.900") }}
     >
       <Stack direction={"row"} align={"center"}>
         <Box>
           <Text
             transition={"all .3s ease"}
-            _groupHover={{ color: "pink.400" }}
+            _groupHover={{ color: "blue.400" }}
             fontWeight={500}
           >
             {label}
@@ -202,7 +202,7 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
           align={"center"}
           flex={1}
         >
-          <Icon color={"pink.400"} w={5} h={5} as={ChevronRightIcon} />
+          <Icon color={"blue.400"} w={5} h={5} as={ChevronRightIcon} />
         </Flex>
       </Stack>
     </Link>
@@ -289,13 +289,13 @@ const NAV_ITEMS: Array<NavItem> = [
     label: "Cryptocurrencies",
     children: [
       {
-        label: "Explore Design Work",
-        subLabel: "Trending Design to inspire you",
+        label: "MePoupe",
+        subLabel: "Youtube channel to inspire you 1",
         href: "#",
       },
       {
-        label: "New & Noteworthy",
-        subLabel: "Up-and-coming Designers",
+        label: "Primo Rico",
+        subLabel: "Youtube channel to inspire you 2",
         href: "#",
       },
     ],
@@ -304,12 +304,12 @@ const NAV_ITEMS: Array<NavItem> = [
     label: "Exchanges",
     children: [
       {
-        label: "Job Board",
-        subLabel: "Find your dream design job",
+        label: "Submenu 1",
+        subLabel: "Find your dream job",
         href: "#",
       },
       {
-        label: "Freelance Projects",
+        label: "Submenu 2",
         subLabel: "An exclusive list for contract work",
         href: "#",
       },

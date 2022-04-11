@@ -41,8 +41,11 @@ export function DataTable<Data extends object>({
     prepareRow
   } = useTable({ columns, data }, useSortBy);
 
+  //Some lines contains eslint-disable because component returns key prop but eslint cant see it
+
   return (
     <Table {...getTableProps()}>
+      {/* eslint-disable react/jsx-key */}
       <Thead>
         {headerGroups.map((headerGroup) => (
           <Tr {...headerGroup.getHeaderGroupProps()}>
@@ -85,6 +88,7 @@ export function DataTable<Data extends object>({
           );
         })}
       </Tbody>
+      {/* eslint-disable react/jsx-key */}
     </Table>
   );
 }
