@@ -1,13 +1,4 @@
-import {
-  Box,
-  Flex,
-  FormLabel,
-  Heading,
-  SimpleGrid,
-  Spacer,
-  TagLabel,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Flex, Heading, SimpleGrid, Spacer, Text } from "@chakra-ui/react";
 import Carrousel from "../components/Carrousel";
 import Header from "../components/Header";
 import { DataTable } from "../components/DataTable";
@@ -15,9 +6,12 @@ import { Switch } from "@chakra-ui/react";
 import { Column } from "react-table";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "../services/api";
+import NameWithImage from "../components/NameWithImage";
+import ButtonSmall from "../components/ButtonSmall";
+import PriceUpOrDown from "../components/PriceUpOrDown";
 
 type DataType = {
-  market_cap_rank:number;
+  market_cap_rank: number;
   name: string;
   price: number;
   current_price: number;
@@ -26,12 +20,10 @@ type DataType = {
   market_cap: number;
 };
 
-
-
 const columns: Column<any>[] = [
   {
     Header: " ",
-    accessor: "",
+    accessor: "favorite",
   },
   {
     Header: "#",
@@ -39,8 +31,7 @@ const columns: Column<any>[] = [
   },
   {
     Header: "Nome",
-    accessor: "name",
-    isNumeric: true,
+    accessor: "customName",
   },
   {
     Header: "Preço",
@@ -49,12 +40,11 @@ const columns: Column<any>[] = [
   },
   {
     Header: "24h %",
-    accessor: "price_change_percentage_24h",
+    accessor: "customPriceChangePercentage24h",
   },
   {
     Header: "7d %",
-    accessor: "atl",
-    isNumeric: true,
+    accessor: "customCurrentPriceModified",
   },
   {
     Header: "Valor de mercado",
@@ -62,18 +52,51 @@ const columns: Column<any>[] = [
   },
 ];
 
+const buildDataToTable = (requestedData: DataType[]) => {
+  let data = requestedData.map((item: any) => {
+    let newItem = { ...item };
+    let nameModified = (
+      <Flex>
+        <NameWithImage
+          name={item.name}
+          image={item.image}
+          symbol={item.symbol}
+        />
+        {item.price_change_percentage_24h < 0 ? (
+          <ButtonSmall label="Buy" />
+        ) : null}
+      </Flex>
+    );
+
+    let currentPriceModified = <PriceUpOrDown price={item.atl} />;
+
+    let priceChangePercentage24hModified = (
+      <PriceUpOrDown price={item.price_change_percentage_24h} />
+    );
+
+    newItem = {
+      ...item,
+      favorite: "★",
+      customName: nameModified,
+      customPriceChangePercentage24h: priceChangePercentage24hModified,
+      customCurrentPriceModified: currentPriceModified,
+    };
+    return newItem;
+  });
+  return data;
+};
+
 export default function Dashboard() {
   const [crypto, setCrypto] = useState<DataType[]>([]);
-
 
   const getCrypto = useCallback(async () => {
     try {
       let url = "/coins/markets/?vs_currency=usd";
       const getCrytoData = await api.get(url);
       const getCryptoContent: DataType[] = getCrytoData.data;
-      setCrypto(getCryptoContent);
-      console.log("getCryptoContent: ",getCryptoContent)
-      console.log(crypto);
+      const newData = buildDataToTable(getCryptoContent);
+      setCrypto(newData);
+      console.log("getCryptoContent: ", getCryptoContent);
     } catch (e) {
       console.error("Analysis error: ", e);
     }
@@ -117,7 +140,6 @@ export default function Dashboard() {
         <Box w="100%" maxWidth={1480} mx="auto" px="6" mt="30px">
           <DataTable columns={columns} data={crypto} />
         </Box>
-
       </Flex>
     </>
   );

@@ -9,19 +9,8 @@ export default function Table() {
 }
 */
 import * as React from "react";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  chakra
-} from "@chakra-ui/react";
-import {
-  TriangleDownIcon,
-  TriangleUpIcon
-} from "@chakra-ui/icons";
+import { Table, Thead, Tbody, Tr, Th, Td, chakra } from "@chakra-ui/react";
+import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { useTable, useSortBy, Column } from "react-table";
 
 export type DataTableProps<Data extends object> = {
@@ -31,15 +20,10 @@ export type DataTableProps<Data extends object> = {
 
 export function DataTable<Data extends object>({
   data,
-  columns
+  columns,
 }: DataTableProps<Data>) {
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow
-  } = useTable({ columns, data }, useSortBy);
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable({ columns, data }, useSortBy);
 
   //Some lines contains eslint-disable because component returns key prop but eslint cant see it
 
@@ -51,9 +35,7 @@ export function DataTable<Data extends object>({
           <Tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (
               <Th
-                {...column.getHeaderProps(
-                  column.getSortByToggleProps()
-                )}
+                {...column.getHeaderProps(column.getSortByToggleProps())}
                 isNumeric={column.isNumeric}
               >
                 {column.render("Header")}
@@ -75,12 +57,9 @@ export function DataTable<Data extends object>({
         {rows.map((row) => {
           prepareRow(row);
           return (
-            <Tr {...row.getRowProps()}  _hover={{ bg: "gray.100" }}>
+            <Tr {...row.getRowProps()} _hover={{ bg: "gray.100" }}>
               {row.cells.map((cell) => (
-                <Td
-                  {...cell.getCellProps()}
-                  isNumeric={cell.column.isNumeric}
-                >
+                <Td {...cell.getCellProps()} isNumeric={cell.column.isNumeric}>
                   {cell.render("Cell")}
                 </Td>
               ))}
@@ -92,4 +71,3 @@ export function DataTable<Data extends object>({
     </Table>
   );
 }
-
